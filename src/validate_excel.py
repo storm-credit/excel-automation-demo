@@ -187,16 +187,18 @@ def validate(employees_path: Path, departments_path: Path, output_path: Path) ->
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="직원/부서 Excel 자동 매칭 및 오류 검증")
-    parser.add_argument("employees", type=Path)
-    parser.add_argument("departments", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("result.xlsx"))
+    parser = argparse.ArgumentParser(
+        description="Match employee and department Excel files and validate common data errors."
+    )
+    parser.add_argument("employees", type=Path, help="Employee Excel file (.xlsx)")
+    parser.add_argument("departments", type=Path, help="Department master Excel file (.xlsx)")
+    parser.add_argument("--output", type=Path, default=Path("result.xlsx"), help="Output Excel path")
     args = parser.parse_args()
 
     summary = validate(args.employees, args.departments, args.output)
     print(
-        f"완료: {args.output} | 전체 {summary['total']}건 | "
-        f"정상 {summary['ok']}건 | 오류 {summary['error']}건"
+        f"Completed: {args.output} | total={summary['total']} | "
+        f"ok={summary['ok']} | error={summary['error']}"
     )
 
 
