@@ -19,4 +19,4 @@ jobs:
       - name: Golden Case tests
         run: pytest -q
       - name: 10k row performance smoke
-        run: python scripts/performance_smoke.py --rows 10000 --max-seconds 20
+        run: python -m scripts.performance_smoke --rows 10000 --max-seconds 20
