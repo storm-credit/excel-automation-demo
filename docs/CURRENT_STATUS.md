@@ -1,7 +1,9 @@
 # CURRENT STATUS
 
 ## Current Phase
-Prototype v0.1 / Minimum Action Agent OS adopted
+**Client-ready MVP v0.2 / Minimum Action Agent OS adopted**
+
+첫 외주 포트폴리오로 보여줄 수 있는 최소 제품 범위가 완료되었습니다.
 
 ## Completed
 - 더미 직원/부서 데이터 작성
@@ -9,26 +11,43 @@ Prototype v0.1 / Minimum Action Agent OS adopted
 - 중복 사번 검출
 - 부서코드 누락 검출
 - 미등록 부서코드 검출
-- Result / Errors / Summary 출력 구현
-- 재현 가능한 샘플 생성 스크립트 추가
-- Golden Case 테스트 추가
-- GitHub Actions CI 추가 및 성공 확인
-- Windows EXE 빌드 워크플로 추가
+- Result / Errors / Summary Excel 출력
+- 결과 상태 셀 강조 및 필터 적용
+- 흔한 한글/영문 컬럼명 자동 매핑
+- 중복 의미 컬럼 ambiguity guard
+- 재현 가능한 샘플 생성 스크립트
+- 비개발자용 Tkinter GUI
+- GUI에서 파일 선택 / 결과 위치 선택 / 검증 실행 / 결과 열기
+- CLI 실행 경로 유지
+- Golden Case 자동 테스트 4개 통과
+- 10,000행 성능 스모크 통과
+- GitHub Actions Linux CI 통과
+- Windows CLI EXE PyInstaller 빌드 및 스모크 성공
+- Windows GUI EXE PyInstaller 빌드 및 스모크 성공
+- `excel-validator-windows` Artifact 업로드 성공
+- 사용자 가이드 추가
+- README를 외주 포트폴리오 관점으로 개편
 - `storm-credit/minimum-action-agent-os`를 공통 작업 방법론 정본으로 연결
-- 프로젝트 CLAUDE.md에서 공통 OS 규칙 중복 제거
+
+## Verification Evidence
+PR #2 기준:
+- Linux CI: syntax / pytest / 10k performance smoke 성공
+- Windows CI: CLI build / GUI build / CLI smoke / GUI smoke / artifact upload 성공
+- Windows Artifact: `excel-validator-windows`
 
 ## OS Adoption Review
-- 현재 구현 작업은 단순/소형이므로 별도 Builder Agent를 만들지 않고 direct work를 기본으로 사용한다.
-- 독립 검증은 pytest Golden Case + GitHub Actions CI가 담당한다.
+- 현재 범위는 단순 소형 자동화이므로 별도 Builder Agent를 늘리지 않고 direct work를 기본으로 사용한다.
+- 독립 검증은 pytest Golden Case + Linux/Windows GitHub Actions가 담당한다.
 - 공통 preflight/blindspot 절차는 프로젝트에 복제하지 않고 Minimum Action Agent OS를 참조한다.
-- 프로젝트에는 Excel 도메인 고유 규칙과 테스트만 유지한다.
-- 현재 프로젝트가 직접 설계하는 action surface는 작게 유지하며, 불필요한 Agent/Tool 추가는 하지 않는다.
+- 프로젝트에는 Excel 도메인 고유 규칙, 상태, 결정, acceptance criteria만 유지한다.
 
-## Open Issues
-- 실제 외주 고객이 파일을 어떻게 제공할지 UX 미정
-- Excel-only vs Python/EXE 실행형 중 최종 상품형 미정
-- 대용량 데이터 성능 검증 미실시
-- 컬럼명 변형 대응 미구현
+## First MVP Boundary
+현재 첫 상품의 완료 범위는 다음으로 고정한다.
+
+`파일 2개 선택 → 자동 컬럼 인식 → 매칭/검증 → result.xlsx 생성 → 오류/요약 확인`
+
+CSV, 사용자 정의 컬럼 매핑 UI, DB, API, 웹 업로드, 설치프로그램/코드서명은 **첫 외주를 시작하기 위한 필수 범위가 아니므로 후속 요구가 생길 때만 추가**한다.
 
 ## Next Action
-첫 외주용 MVP로 `파일 2개 선택 → 검증 실행 → result.xlsx 생성` 흐름을 가장 단순한 방식으로 완성하고 Windows EXE Artifact까지 검증한다.
+기능을 더 늘리기보다 이 저장소를 실제 소형 외주 지원에 사용한다.
+다음 기술 포트폴리오는 별도 저장소에서 간단한 REST API 연동/데이터 저장 자동화로 확장하는 것이 우선이다.
