@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 import threading
 import webbrowser
 from pathlib import Path
@@ -188,7 +189,18 @@ class ExcelValidatorApp:
             webbrowser.open(self.last_output.resolve().as_uri())
 
 
+def smoke_test() -> None:
+    root = tk.Tk()
+    root.withdraw()
+    root.update_idletasks()
+    root.destroy()
+
+
 def main() -> None:
+    if "--smoke-test" in sys.argv:
+        smoke_test()
+        return
+
     root = tk.Tk()
     ExcelValidatorApp(root)
     root.mainloop()
