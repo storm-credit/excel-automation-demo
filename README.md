@@ -3,6 +3,7 @@
 > **두 개의 Excel 파일을 넣으면, 자동으로 매칭하고 오류를 찾아 결과 파일까지 만들어주는 소형 업무자동화 데모**
 
 [![CI](https://github.com/storm-credit/excel-automation-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/storm-credit/excel-automation-demo/actions/workflows/ci.yml)
+[![Windows EXE](https://github.com/storm-credit/excel-automation-demo/actions/workflows/build-windows.yml/badge.svg)](https://github.com/storm-credit/excel-automation-demo/actions/workflows/build-windows.yml)
 
 이 프로젝트는 반복적인 Excel/CSV 대조 업무를 **버튼 한 번 수준의 자동 처리 흐름**으로 바꾸기 위한 외주 포트폴리오 샘플입니다.
 
@@ -182,9 +183,9 @@ UNKNOWN_DEPT
 - 미등록 부서코드 → `UNKNOWN_DEPT`
 - 필수 컬럼 누락 → 오류 처리
 
-### GitHub Actions
+### GitHub Actions CI
 
-`push` 또는 Pull Request가 발생하면 GitHub Actions가 자동으로 테스트합니다.
+`push` 또는 Pull Request가 발생하면 자동으로 테스트합니다.
 
 ```text
 Push / Pull Request
@@ -196,14 +197,23 @@ pytest Golden Cases
 PASS / FAIL
 ```
 
-Windows 실행파일 빌드 워크플로도 포함되어 있습니다.
+### Windows 실행파일
+
+`main`에 변경이 반영되거나 버전 태그를 만들면 Windows 실행파일도 자동 빌드합니다.
 
 ```text
-GitHub Actions
-→ Build Windows EXE
-→ excel-validator.exe
-→ Artifact
+main update / v* tag
+        ↓
+PyInstaller build
+        ↓
+EXE smoke test
+        ↓
+excel-validator.exe
+        ↓
+GitHub Actions Artifact
 ```
+
+즉 코드 변경 후 **테스트와 실행파일 생성 여부를 GitHub Actions에서 다시 검증**합니다.
 
 ---
 
@@ -219,7 +229,7 @@ excel-automation-demo/
 │  └─ test_validate_excel.py  # Golden Case 테스트
 ├─ .github/workflows/
 │  ├─ ci.yml                  # Push/PR 자동 테스트
-│  └─ build-windows.yml       # Windows EXE 빌드
+│  └─ build-windows.yml       # Windows EXE 빌드/스모크 테스트
 ├─ docs/
 │  ├─ ACCEPTANCE_CRITERIA.md
 │  ├─ CURRENT_STATUS.md
@@ -231,21 +241,19 @@ excel-automation-demo/
 
 ---
 
-## AI 작업 방법론
+## 개발 원칙
 
-이 프로젝트의 AI-assisted workflow는 공통 운영 표준인
-[`storm-credit/minimum-action-agent-os`](https://github.com/storm-credit/minimum-action-agent-os)를 따릅니다.
-
-프로젝트 자체에는 Excel 자동화의 목표·제약·테스트·현재 상태만 유지하고, 범용 Agent 운영 규칙을 중복 복사하지 않습니다.
+이 프로젝트는 공통 **Minimum Action Agent OS** 방식으로 작업하되, 공개 저장소에는 프로젝트 자체에 필요한 목표·제약·테스트·현재 상태만 유지합니다.
 
 핵심 원칙:
 
 - 필요한 Tool만 사용
 - 필요한 Context만 전달
 - 구현 전 맹점/함정 확인
-- 설계 선택지가 실제로 있을 때만 4안 비교
+- 설계 선택지가 실제로 있을 때만 대안 비교
 - Golden Case로 결과 검증
 - 계획이 바뀌면 Decision Log 기록
+- 공통 Agent 운영 규칙과 프로젝트 고유 규칙을 분리
 
 ---
 
@@ -260,7 +268,7 @@ excel-automation-demo/
 - [x] 오류 결과 Excel 생성
 - [x] Golden Case 테스트
 - [x] GitHub Actions CI
-- [x] Windows EXE 빌드 Workflow 정의
+- [x] Windows EXE 빌드 + 스모크 테스트 Workflow 정의
 - [ ] 컬럼명 자동 매핑
 - [ ] 10,000행 이상 성능 검증
 - [ ] 비개발자용 단일 실행 UX
