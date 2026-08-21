@@ -22,16 +22,27 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pyinstaller
 
-      - name: Build executable
-        run: pyinstaller --onefile --name excel-validator src/validate_excel.py
+      - name: Build CLI executable
+        run: pyinstaller --noconfirm --onefile --name excel-validator-cli src/validate_excel.py
 
-      - name: Smoke test executable
-        run: .\dist\excel-validator.exe --help
+      - name: Build GUI executable
+        run: pyinstaller --noconfirm --onefile --windowed --name excel-validator-gui --paths . src/gui.py
 
-      - name: Upload executable
+      - name: Smoke test CLI executable
+        run: .\dist\excel-validator-cli.exe --help
+
+      - name: Smoke test GUI executable
+        shell: powershell
+        run: |
+          $process = Start-Process -FilePath ".\dist\excel-validator-gui.exe" -ArgumentList "--smoke-test" -Wait -PassThru
+          if ($process.ExitCode -ne 0) { exit $process.ExitCode }
+
+      - name: Upload Windows executables
         uses: actions/upload-artifact@v4
         with:
           name: excel-validator-windows
-          path: dist/excel-validator.exe
+          path: |
+            dist/excel-validator-cli.exe
+            dist/excel-validator-gui.exe
           if-no-files-found: error
           retention-days: 14
